@@ -45,21 +45,21 @@ const (
 )
 
 func main() {
-	// A, B, Y, PS, PM, L parameters
+	// A, B, Y, PP, PM, L parameters
 	args := os.Args[1:]
 	A, _ := strconv.ParseFloat(args[0], 64)
 	B, _ := strconv.ParseFloat(args[1], 64)
 	Y, _ := strconv.ParseFloat(args[2], 64)
-	PS, _ := strconv.ParseFloat(args[3], 64)
+	PP, _ := strconv.ParseFloat(args[3], 64)
 	PM, _ := strconv.ParseFloat(args[4], 64)
 	L, _ := strconv.ParseInt(args[5], 10, 64)
 
-	fmt.Printf("settings:\t A=%.4f B=%.4f Y=%.4f PS=%.4f PM=%.4f I=%d size=%d\n", A, B, Y, PS, PM, L, size)
+	fmt.Printf("settings:\t A=%.4f B=%.4f Y=%.4f PP=%.4f PM=%.4f I=%d size=%d\n", A, B, Y, PP, PM, L, size)
 
 	// create matrices
 	var coldness_matrix Matrix
 	var mask_matrix Mask
-	init_matrices(B, PS, PM, &coldness_matrix, &mask_matrix)
+	init_matrices(B, PP, PM, &coldness_matrix, &mask_matrix)
 
 	// run simulation loop
 	for iteration := int64(0); iteration <= L; iteration++ {
@@ -68,19 +68,19 @@ func main() {
 	}
 
 	// save as png
-	filename := fmt.Sprintf("snowflakes/%.4f-%.4f-%.4f-%.4f-%.4f-%d-%d.png", A, B, Y, PS, PM, L, size)
+	filename := fmt.Sprintf("snowflakes/%.4f-%.4f-%.4f-%.4f-%.4f-%d-%d.png", A, B, Y, PP, PM, L, size)
 	save(filename, &coldness_matrix)
 	fmt.Println("\nsaved result:\t", filename)
 }
 
-func init_matrices(B, PS, PM float64, coldness_matrix *Matrix, mask_matrix *Mask) {
+func init_matrices(B, PP, PM float64, coldness_matrix *Matrix, mask_matrix *Mask) {
 	// perlin noise generator
 	perlin := perlin.NewPerlin(2, 2, 1, 1)
 
 	for i := 0; i < size; i++ {
 		for j := 0; j < size; j++ {
-			// set coldness initial background level, B, PS, PM parameters are used here
-			perlin_value := perlin.Noise2D(float64(i)*PS, float64(j)*PS) * PM
+			// set coldness initial background level, B, PP, PM parameters are used here
+			perlin_value := perlin.Noise2D(float64(i)*PP, float64(j)*PP) * PM
 			coldness_matrix[i][j] = perlin_value + B
 
 			// set a border for the matrix where no calculation is done
